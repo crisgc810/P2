@@ -25,14 +25,16 @@ int main(int argc, char *argv[]) {
   unsigned int t, last_t; /* in frames */
 
   char	*input_wav, *output_vad, *output_wav;
+  
   float alfa1;
+
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
 
   verbose    = args.verbose ? DEBUG_VAD : 0;
   input_wav  = args.input_wav;
   output_vad = args.output_vad;
   output_wav = args.output_wav;
-  alfa1 = atof(args.alfa1);
+  alfa1=atof(args.alfa1);
 
   if (input_wav == 0 || output_vad == 0) {
     fprintf(stderr, "%s\n", args.usage_pattern);
