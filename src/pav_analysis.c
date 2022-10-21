@@ -2,7 +2,7 @@
 #include "pav_analysis.h"
 
 float compute_power(const float *x, unsigned int N) {
-	double count=0;
+	float count=1e-12;
 	int i;
 	float res;
 	
