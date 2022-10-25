@@ -69,61 +69,35 @@ unsigned int vad_frame_size(VAD_DATA *vad_data) {
  */
 VAD_STATE vad(VAD_DATA *vad_data, float *x) {
 
+  /* 
+   * TODO: You can change this, using your own features,
+   * program finite state automaton, define conditions, etc.
+   */
+
   Features f = compute_features(x, vad_data->frame_length);
   vad_data->last_feature = f.p; /* save feature, in case you want to show */
+
   switch (vad_data->state) {
   case ST_INIT:
     vad_data->state = ST_SILENCE;
-    vad_data->umbral1=f.p +vad_data->alfa1;
-    vad_data->umbral2 = f.p + vad_data->alfa2;
     break;
 
   case ST_SILENCE:
-    if (f.p > vad_data->umbral1){
-    	vad_data->state=ST_MAYBE_VOICE;
-    }
+    if (f.p > 0.95)
+      vad_data->state = ST_VOICE;
     break;
 
   case ST_VOICE:
-    if (f.p < vad_data->umbral2){
-      vad_data->state = ST_MAYBE_SILENCE;
-    }
+    if (f.p < 0.01)
+      vad_data->state = ST_SILENCE;
     break;
-    
-  case ST_MAYBE_SILENCE:
-    vad_data->contador++;
-    if(vad_data->contador>5){
-    	vad_data->state = ST_SILENCE;
-    	vad_data->contador=0;
-    }else if(f.p > vad_data->umbral2){
-    	vad_data->state=ST_VOICE;
-    	vad_data->contador=0;
-    }
-   	 		
-   break;
-  case ST_MAYBE_VOICE:
-   vad_data->contador++;
-   if(vad_data->contador>5){
-    	vad_data->state = ST_SILENCE;
-    	vad_data->contador=0;
-    }else if(f.p > vad_data->umbral2){
-    	vad_data->state=ST_VOICE;
-    	vad_data->contador=0;
-    }
-   	 
-  
-  	break;
 
   case ST_UNDEF:
     break;
   }
-
   if (vad_data->state == ST_SILENCE ||
       vad_data->state == ST_VOICE)
     return vad_data->state;
-  else if(vad_data->state == ST_SILENCE ||    // Change 
-      vad_data->state == ST_VOICE)            // Change 
-      return ST_SILENCE;                      // Change 
   else
     return ST_UNDEF;
 }
