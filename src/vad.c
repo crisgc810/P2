@@ -28,21 +28,14 @@ typedef struct {
   float am;
 } Features;
 
-/* 
- * TODO: Delete and use your own features!
- */
-
+/* Compute signal x features. Used only in this file*/
 Features compute_features(const float *x, int N) {
   Features feat;
-  feat.p=compute_power(x,N);
+  feat.p = compute_power(x,N);
   feat.zcr = compute_zcr(x,N,16000);
   feat.am = compute_am(x,N);
   return feat;
 }
-
-/* 
- * TODO: Init the values of vad_data
- */
 
 VAD_DATA * vad_open(float rate, float alfa1, float alfa2) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
@@ -56,6 +49,9 @@ VAD_DATA * vad_open(float rate, float alfa1, float alfa2) {
 }
 
 VAD_STATE vad_close(VAD_DATA *vad_data) {
+  /* 
+   * TODO: decide what to do with the last undecided frames
+   */
   VAD_STATE state = vad_data->state;
 
   free(vad_data);
@@ -67,7 +63,10 @@ unsigned int vad_frame_size(VAD_DATA *vad_data) {
 }
 
 
-
+/* 
+ * TODO: Implement the Voice Activity Detection 
+ * using a Finite State Automata
+ */
 VAD_STATE vad(VAD_DATA *vad_data, float *x) {
 
   Features f = compute_features(x, vad_data->frame_length);
@@ -122,6 +121,9 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   if (vad_data->state == ST_SILENCE ||
       vad_data->state == ST_VOICE)
     return vad_data->state;
+  else if(vad_data->state == ST_SILENCE ||    // Change 
+      vad_data->state == ST_VOICE)            // Change 
+      return ST_SILENCE;                      // Change 
   else
     return ST_UNDEF;
 }
