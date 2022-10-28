@@ -17,13 +17,12 @@ int main(int argc, char *argv[]) {
   int n_read = 0, i;
 
   VAD_DATA *vad_data;
-  VAD_STATE state, last_state;
+  VAD_STATE state, last_state, last_defined_state;
 
   float *buffer, *buffer_zeros;
   int frame_size;         /* in samples */
   float frame_duration;   /* in seconds */
-  unsigned int t, last_t; /* in frames */
-
+  unsigned int t, last_t, last_defined_t; /* in frames */
   char	*input_wav, *output_vad, *output_wav;
   
   float alfa1;
@@ -31,10 +30,10 @@ int main(int argc, char *argv[]) {
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
 
-  verbose    = args.verbose ? DEBUG_VAD : 0;
-  input_wav  = args.input_wav;
-  output_vad = args.output_vad;
-  output_wav = args.output_wav;
+  verbose    =args.verbose ? DEBUG_VAD : 0;
+  input_wav  =args.input_wav;
+  output_vad =args.output_vad;
+  output_wav =args.output_wav;
   alfa1=atof(args.alfa1);
   alfa2=atof(args.alfa2);
 
@@ -82,8 +81,10 @@ int main(int argc, char *argv[]) {
     /* End loop when file has finished (or there is an error) */
     if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
 
-    if (sndfile_out != 0) {
-      /* TODO: copy all the samples into sndfile_out */
+    if (sndfile_out != 0) {/* TODO: copy all the samples into sndfile_out */
+      for (i = 0; i < n_read; i++){
+        fprintf(sndfile_out, %f, buffer[i]);
+      }
     }
 
     state = vad(vad_data, buffer);

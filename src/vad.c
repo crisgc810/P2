@@ -14,7 +14,7 @@ const float FRAME_TIME = 10.0F; /* in ms. */
  */
 
 const char *state_str[] = {
-  "UNDEF", "S", "V", "INIT"
+  "UNDEF", "S", "V", "INIT", "MV", "MS"
 };
 
 const char *state2str(VAD_STATE st) {
@@ -37,7 +37,7 @@ Features compute_features(const float *x, int N) {
   return feat;
 }
 
-VAD_DATA * vad_open(float rate, float alfa1, float alfa2) {
+VAD_DATA * vad_open(float rate, float alfa1, float alfa2,) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
@@ -45,6 +45,8 @@ VAD_DATA * vad_open(float rate, float alfa1, float alfa2) {
   vad_data->alfa1=alfa1;
   vad_data->alfa2=alfa2;
   vad_data->contador=0;
+  vad_data->VCn=VCn;
+  vad_data->VCm=VCm;
   return vad_data;
 }
 
