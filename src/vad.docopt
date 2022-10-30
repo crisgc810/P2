@@ -6,11 +6,10 @@ Usage:
    vad --version
 
 Options:
-   -i FILE, --input-wav=FILE   WAVE file for voice activity detection
-   -o FILE, --output-vad=FILE  Label file with the result of VAD
-   -w FILE, --output-wav=FILE  WAVE file with silences cleared
-   -1 REAL, --alfa1=REAL  Increment de l'umbral 1 [default: 0]
-   -2 REAL, --alfa2=REAL  Increment de l'umbral 2 [default: 0]
-   -v, --verbose  Show debug information
-   -h, --help     Show this screen
-   --version      Show the version of the project
+   -i FILE, --input-wav=FILE                 WAVE file for voice activity detection
+   -o FILE, --output-vad=FILE                Label file with the result of VAD
+   -w FILE, --output-wav=FILE                WAVE file with silences cleared
+   -1 REAL, --alfa1=REAL                     Guany per obtenir el llindar de deteccio 1 [default: 5]
+   -2 REAL, --alfa2=REAL                     Guany per obtenir el llindar de deteccio 2 [default: 5]
+   -h, --help                                Show this screen
+   --version                                 Show the version of the project

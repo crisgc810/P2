@@ -17,26 +17,26 @@ int main(int argc, char *argv[]) {
   int n_read = 0, i;
 
   VAD_DATA *vad_data;
-  VAD_STATE state, last_state, last_defined_state;
+  VAD_STATE state, last_state, undefined_state;
 
   float *buffer, *buffer_zeros;
   int frame_size;         /* in samples */
   float frame_duration;   /* in seconds */
-  unsigned int t, last_t, last_defined_t; /* in frames */
-  char	*input_wav, *output_vad, *output_wav;
-  
+  unsigned int t, last_t; /* in frames */
+
   float alfa1;
   float alfa2;
 
+  char	*input_wav, *output_vad, *output_wav;
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
 
-  verbose    =args.verbose ? DEBUG_VAD : 0;
-  input_wav  =args.input_wav;
-  output_vad =args.output_vad;
-  output_wav =args.output_wav;
-  alfa1=atof(args.alfa1);
-  alfa2=atof(args.alfa2);
-
+  //verbose    = args.verbose ? DEBUG_VAD : 0;
+  input_wav  = args.input_wav;
+  output_vad = args.output_vad;
+  output_wav = args.output_wav;
+  alfa1 = atof(args.alfa1);
+  alfa2 = atof(args.alfa2);
+  
   if (input_wav == 0 || output_vad == 0) {
     fprintf(stderr, "%s\n", args.usage_pattern);
     return -1;
@@ -53,11 +53,13 @@ int main(int argc, char *argv[]) {
     return -2;
   }
 
+
   /* Open vad file */
   if ((vadfile = fopen(output_vad, "wt")) == 0) {
     fprintf(stderr, "Error opening output vad file %s (%s)\n", output_vad, strerror(errno));
     return -1;
   }
+
 
   /* Open output sound file, with same format, channels, etc. than input */
   if (output_wav) {
@@ -75,16 +77,17 @@ int main(int argc, char *argv[]) {
   for (i=0; i< frame_size; ++i) buffer_zeros[i] = 0.0F;
 
   frame_duration = (float) frame_size/ (float) sf_info.samplerate;
-  last_state = ST_UNDEF;
+  
+  last_state = ST_SILENCE; 
+  undefined_state = ST_SILENCE; 
 
   for (t = last_t = 0; ; t++) { /* For each frame ... */
     /* End loop when file has finished (or there is an error) */
     if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
 
-    if (sndfile_out != 0) {/* TODO: copy all the samples into sndfile_out */
-      for (i = 0; i < n_read; i++){
-        fprintf(sndfile_out, %f, buffer[i]);
-      }
+    if (sndfile_out != 0) {
+      /* TODO: copy all the samples into sndfile_out */
+      sf_writef_float(sndfile_out,buffer,frame_size);
     }
 
     state = vad(vad_data, buffer);
@@ -93,16 +96,32 @@ int main(int argc, char *argv[]) {
     /* TODO: print only SILENCE and VOICE labels */
     /* As it is, it prints UNDEF segments but is should be merge to the proper value */
     if (state != last_state) {
-      if (t != last_t)
-        fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
-      last_state = state;
-      last_t = t;
+      if(state == ST_UNDEF){
+        undefined_state = last_state;
+      }
+      if (t != last_t){
+        if ((state != undefined_state) && (last_state == ST_UNDEF)){
+          if(undefined_state == ST_SILENCE){
+            if (sndfile_out != 0) {
+              sf_seek(sndfile_out,last_t*frame_size,SEEK_SET);
+            }
+          }
+          last_state = state;
+        }else if (state != ST_UNDEF){
+          fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
+          last_state = state;
+          last_t = t;
+        }
+      }
     }
 
-    if (sndfile_out != 0) {
-      /* TODO: go back and write zeros in silence segments */
+    if (state==ST_SILENCE && sndfile_out != 0){
+      sf_seek(sndfile_out, -frame_size, SEEK_CUR);
+      sf_write_float(sndfile_out, buffer_zeros, frame_size);
+      last_state = state;
     }
   }
+
 
   state = vad_close(vad_data);
   /* TODO: what do you want to print, for last frames? */
