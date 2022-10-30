@@ -110,16 +110,25 @@ Ejercicios
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
+	
+	Podemos observar que en los tramos de voz tenemos un valor de poténcia aproximado de 30 dB, pero para mejorar el umbral se puede realizar una media de las tramas.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
 
+	Los tramos de silencio son más cortos que los de voz, alrededor de los 0,5 segundos, mientras que los tramos de voz suelen tener una duracion de por lo menos unos pocos segundos.
+
+
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+
+	No son demasiado útiles por si solos pero se pueden usar para perfeccionar el autómata en ciertas ocasiones.
 
 
 ### Desarrollo del detector de actividad vocal
 
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal en
   tiempo real tan exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
+
+Hemos obtenido una F-score total de 93,524% usando unos valores para alfa1 y alfa2 de 5.
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
@@ -130,6 +139,7 @@ Ejercicios
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
 
+<img src="img/fscore.png" align="center">
 
 ### Trabajos de ampliación
 
