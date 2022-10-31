@@ -111,7 +111,7 @@ Ejercicios
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
 	
-	Podemos observar que en los tramos de voz tenemos un valor de poténcia aproximado de 30 dB, pero para mejorar el umbral se puede realizar una media de las tramas.
+	Podemos observar que en los tramos de voz tenemos un valor de poténcia aproximado de 30 dB, pero para mejorar el umbral se puede realizar una media de las tramas. Con un incremento entre 10 y 15 dB en una señal ruidosa se puede estar muy seguro de que se trata de voz.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
 
