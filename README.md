@@ -133,7 +133,10 @@ Hemos obtenido una F-score total de 93,524% usando unos valores para alfa1 y alf
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
+<img src="img/Captura_vad_lab.png" align="center">
+
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
+La detección automática mantiene más tiempo las etiquetas de Voz que el manual.
 
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
@@ -149,11 +152,14 @@ Hemos obtenido una F-score total de 93,524% usando unos valores para alfa1 y alf
   la que se vea con claridad la señal antes y después de la cancelación (puede que `wavesurfer` no sea la
   mejor opción para esto, ya que no es capaz de visualizar varias señales al mismo tiempo).
 
+  Lo intentamos pero por tiempo no funciona.
+
 #### Gestión de las opciones del programa usando `docopt_c`
 
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
 
+<img src="img/Captura_help.png" align="center">
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
